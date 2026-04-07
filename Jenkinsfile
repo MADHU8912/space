@@ -7,27 +7,9 @@ pipeline {
     }
 
     stages {
-        stage('Check Files') {
-            steps {
-                bat 'dir'
-            }
-        }
-
         stage('Build Docker Image') {
             steps {
                 bat 'docker build -t space .'
-            }
-        }
-
-        stage('Remove Old Container') {
-            steps {
-                bat 'docker rm -f space-container || exit /b 0'
-            }
-        }
-
-        stage('Run Container') {
-            steps {
-                bat 'docker run -d --name space-container space'
             }
         }
 
@@ -52,7 +34,7 @@ pipeline {
 
     post {
         always {
-            bat 'docker logout || exit /b 0'
+            echo 'Pipeline completed'
         }
     }
 }
