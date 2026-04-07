@@ -1,34 +1,47 @@
 pipeline {
     agent any
 
-    environment {
-        DOCKERHUB_CREDS = credentials('dockerhub-creds')
-        IMAGE_NAME = 'nikhilabba12/space:latest'
-    }
-
     stages {
-        stage('Build Docker Image') {
+        stage('Check Files') {
             steps {
-                bat 'docker build -t space .'
+                bat 'dir'
             }
         }
 
-        stage('Docker Login') {
-    steps {
-        withCredentials([usernamePassword(credentialsId: 'dockerhub-creds', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
-            bat '@echo %DOCKER_PASS% | docker login -u %DOCKER_USER% --password-stdin'
+        stage('Build Docker Image') {
+            steps {
+                bat 'docker build -t my-devops-app .'
+            }
         }
-    }
-}
 
-stage('Tag Image') {
-    steps {
-        bat 'docker tag my-devops-app nikhilabba12/my-devops-app:latest'
-    }
-}
+        stage('Remove Old Container') {
+            steps {
+                bat 'docker rm -f my-devops-container || exit /b 0'
+            }
+        }
 
-stage('Push Image') {
-    steps {
-        bat 'docker push nikhilabba12/my-devops-app:latest'
+        stage('Run Container') {
+            steps {
+                bat 'docker run --name my-devops-container my-devops-app'
+            }
+        }
+
+        stage('Docker Hub Login Check') {
+            steps {
+                bat 'docker info'
+            }
+        }
+
+        stage('Tag Image') {
+            steps {
+                bat 'docker tag my-devops-app nikhilabba12/my-devops-app:latest'
+            }
+        }
+
+        stage('Push Image') {
+            steps {
+                bat 'docker push nikhilabba12/my-devops-app:latest'
+            }
+        }
     }
 }
