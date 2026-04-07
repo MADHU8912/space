@@ -26,13 +26,13 @@ pipeline {
             }
         }
 
-        stage('Docker Hub Login Check') {
-            steps {
-                bat 'docker info'
-            }
-        }
+        stage('Docker Login') {
+    steps {
+        bat '@echo %DOCKERHUB_CREDS_PSW% | docker login -u %DOCKERHUB_CREDS_USR% --password-stdin'
+    }
+}
 
-        stage('Tag Image') {
+stage('Tag Image') {
     steps {
         bat 'docker tag my-devops-app nikhilabba12/my-devops-app:latest'
     }
@@ -41,11 +41,5 @@ pipeline {
 stage('Push Image') {
     steps {
         bat 'docker push nikhilabba12/my-devops-app:latest'
-    }
-}
-stage('Docker Test') {
-    steps {
-        bat 'docker version'
-        bat 'docker info'
     }
 }
