@@ -16,19 +16,21 @@ pipeline {
 
         stage('Remove Old Container') {
             steps {
-                bat 'docker rm -f space || exit /b 0'
+                bat 'docker rm -f space-container || exit /b 0'
             }
         }
 
         stage('Run Container') {
             steps {
-                bat 'docker run --name my-devops-container space'
+                bat 'docker run --name space-container space'
             }
         }
 
-        stage('Docker Hub Login Check') {
+        stage('Docker Login') {
             steps {
-                bat 'docker info'
+                withCredentials([usernamePassword(credentialsId: 'dockerhub-creds', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+                    bat '@echo %DOCKER_PASS% | docker login -u %DOCKER_USER% --password-stdin'
+                }
             }
         }
 
