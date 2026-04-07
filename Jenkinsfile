@@ -14,27 +14,21 @@ pipeline {
         }
 
         stage('Docker Login') {
-            steps {
-                bat '@echo %DOCKERHUB_CREDS_PSW% | docker login -u %DOCKERHUB_CREDS_USR% --password-stdin'
-            }
-        }
-
-        stage('Tag Image') {
-            steps {
-                bat 'docker tag space %IMAGE_NAME%'
-            }
-        }
-
-        stage('Push Image') {
-            steps {
-                bat 'docker push %IMAGE_NAME%'
-            }
+    steps {
+        withCredentials([usernamePassword(credentialsId: 'dockerhub-creds', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+            bat '@echo %DOCKER_PASS% | docker login -u %DOCKER_USER% --password-stdin'
         }
     }
+}
 
-    post {
-        always {
-            echo 'Pipeline completed'
-        }
+stage('Tag Image') {
+    steps {
+        bat 'docker tag my-devops-app nikhilabba12/my-devops-app:latest'
+    }
+}
+
+stage('Push Image') {
+    steps {
+        bat 'docker push nikhilabba12/my-devops-app:latest'
     }
 }
