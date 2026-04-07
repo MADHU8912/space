@@ -33,15 +33,13 @@ pipeline {
         }
 
         stage('Tag Image') {
-            steps {
-                bat 'docker tag my-devops-app nikhilabba12/my-devops-app:latest'
-            }
-        }
+    steps {
+        bat 'docker tag my-devops-app nikhilabba12/my-devops-app:latest'
+    }
+}
 
-        stage('Push Image') {
-            steps {
-                bat 'docker push nikhilabba12/my-devops-app:latest'
-            }
-        }
+stage('Push Image') {
+    steps {
+        bat 'docker push nikhilabba12/my-devops-app:latest'
     }
 }
