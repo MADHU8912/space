@@ -43,3 +43,9 @@ stage('Push Image') {
         bat 'docker push nikhilabba12/my-devops-app:latest'
     }
 }
+stage('Docker Test') {
+    steps {
+        bat 'docker version'
+        bat 'docker info'
+    }
+}
