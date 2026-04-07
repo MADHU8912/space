@@ -10,19 +10,19 @@ pipeline {
 
         stage('Build Docker Image') {
             steps {
-                bat 'docker build -t my-devops-app .'
+                bat 'docker build -t space .'
             }
         }
 
         stage('Remove Old Container') {
             steps {
-                bat 'docker rm -f my-devops-container || exit /b 0'
+                bat 'docker rm -f space || exit /b 0'
             }
         }
 
         stage('Run Container') {
             steps {
-                bat 'docker run --name my-devops-container my-devops-app'
+                bat 'docker run --name my-devops-container space'
             }
         }
 
@@ -34,13 +34,13 @@ pipeline {
 
         stage('Tag Image') {
             steps {
-                bat 'docker tag my-devops-app nikhilabba12/my-devops-app:latest'
+                bat 'docker tag space nikhilabba12/space:latest'
             }
         }
 
         stage('Push Image') {
             steps {
-                bat 'docker push nikhilabba12/my-devops-app:latest'
+                bat 'docker push nikhilabba12/space:latest'
             }
         }
     }
